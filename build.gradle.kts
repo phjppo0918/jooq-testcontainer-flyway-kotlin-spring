@@ -1,5 +1,7 @@
 import dev.monosoul.jooq.shadow.org.testcontainers.shaded.org.bouncycastle.cms.RecipientId.password
-import org.jetbrains.kotlin.builtins.StandardNames.FqNames.target
+import org.jooq.meta.jaxb.ForcedType
+import org.jooq.meta.jaxb.Generate
+import org.jooq.meta.jaxb.Strategy
 
 val jooqVersion: String by rootProject
 
@@ -62,44 +64,70 @@ val dbUser: String = System.getProperty("db-user") ?: "root"
 val dbPassword: String = System.getProperty("db-passwd") ?: "verysecret"
 val schema: String = System.getProperty("db-schema") ?: "mydatabase"
 
-jooq {
-    configurations {
-        create("jooqDB") {
-            generateSchemaSourceOnCompilation.set(false) // 기본적으로 스키마 소스 생성을 비활성화합니다.
+sourceSets {
+    main {
+        kotlin {
+            srcDirs(listOf("src/main/kotlin", "src/generated"))
+        }
+    }
+}
 
-            jooqConfiguration.apply {
-                jdbc.apply {
-                    driver = "com.mysql.cj.jdbc.Driver"
-                    url = "jdbc:mysql://localhost:3306/$schema"
-                    user = dbUser
-                    password = dbPassword
-                }
-                generator.apply {
-                    name = "org.jooq.codegen.KotlinGenerator" // 코틀린 제너레이터 명시
-                    database.apply {
-                        name = "org.jooq.meta.mysql.MySQLDatabase"
-                        inputSchema = schema
-                    }
-                    generate.apply {
-                        isDaos = true
-                        isRecords = true
-                        isFluentSetters = true
-                        isJavaTimeTypes = true
-                        isDeprecated = false
-                    }
-                    target.apply {
-                        directory = "src/generated"
-                    }
-                }
+jooq {
+
+    version = jooqVersion
+    withContainer {
+        image {
+            name = "mysql:8.0.33"
+            envVars =
+                mapOf(
+                    "MYSQL_ROOT_PASSWORD" to "passwd",
+                    "MYSQL_DATABASE" to "sakila",
+                )
+        }
+
+        db {
+            username = "root"
+            password = "passwd"
+            name = "sakila"
+            port = 3306
+            jdbc {
+                schema = "jdbc:mysql"
+                driverClassName = "com.mysql.cj.jdbc.Driver"
             }
         }
     }
 }
 
-sourceSets {
-    main {
-        kotlin {
-            srcDirs(listOf("src/main/kotlin", "src/generated"))
+tasks {
+    generateJooqClasses {
+        schemas.set(listOf("sakila"))
+        outputDirectory.set(project.layout.projectDirectory.dir("src/generated"))
+        includeFlywayTable.set(false)
+
+        usingJavaConfig {
+            generate =
+                Generate()
+                    .withJavaTimeTypes(true)
+                    .withDeprecated(false)
+                    .withDaos(true)
+                    .withFluentSetters(true)
+                    .withRecords(true)
+
+            withStrategy(
+                Strategy().withName("jooq.configuration.generator.JPrefixGeneratorStrategy"),
+            )
+
+            database.withForcedTypes(
+                ForcedType()
+                    .withUserType("java.lang.Long")
+                    .withTypes("int unsigned"),
+                ForcedType()
+                    .withUserType("java.lang.Integer")
+                    .withTypes("tinyint unsigned"),
+                ForcedType()
+                    .withUserType("java.lang.Integer")
+                    .withTypes("smallint unsigned"),
+            )
         }
     }
 }
