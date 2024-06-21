@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: jooq-testcontainer-flyway-kotlin-spring
+
+
