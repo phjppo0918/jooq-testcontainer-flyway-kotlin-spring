@@ -30,8 +30,9 @@ class MemberRepository(
 
     fun findById(id: String) = memberDao.findById(id)
 
-    fun findByAge(age: Int): Member? =
-        dslContext.selectFrom(MEMBER)
+    fun findByAge(age: Int): Collection<Member> =
+        dslContext
+            .selectFrom(MEMBER)
             .where(MEMBER.AGE.eq(age))
-            .fetchOneInto(Member::class.java)
+            .fetchInto(Member::class.java)
 }

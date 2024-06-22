@@ -1,5 +1,6 @@
 package org.example.jooqtestcontainerflywaykotlinspring
 
+import org.assertj.core.api.Assertions.assertThat
 import org.jooq.generated.tables.pojos.Member
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -14,10 +15,18 @@ class MemberRepositoryTest {
     private lateinit var memberRepository: MemberRepository
 
     @Test
-    @DisplayName("저장을 수행한다")
+    @DisplayName("저장을 수행 후 조회")
     fun save() {
-        val member = Member("hello", 23)
+        val id = "hello"
+        val member = Member(id, 23)
 
         memberRepository.save(member)
+
+        val result: Collection<Member> = memberRepository.findByAge(23)
+        assertThat(result).isNotEmpty()
+
+        val resultOne: Member? = memberRepository.findById(id)
+
+        assertThat(resultOne).hasNoNullFieldsOrProperties()
     }
 }
