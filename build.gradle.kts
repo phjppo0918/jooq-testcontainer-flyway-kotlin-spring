@@ -80,15 +80,15 @@ jooq {
             name = "mysql:8.0.33"
             envVars =
                 mapOf(
-                    "MYSQL_ROOT_PASSWORD" to "passwd",
-                    "MYSQL_DATABASE" to "sakila",
+                    "MYSQL_ROOT_PASSWORD" to dbPassword,
+                    "MYSQL_DATABASE" to schema,
                 )
         }
 
         db {
-            username = "root"
-            password = "passwd"
-            name = "sakila"
+            username = dbUser
+            password = dbPassword
+            name = schema
             port = 3306
             jdbc {
                 schema = "jdbc:mysql"
@@ -100,7 +100,7 @@ jooq {
 
 tasks {
     generateJooqClasses {
-        schemas.set(listOf("sakila"))
+        schemas.set(listOf(schema))
         outputDirectory.set(project.layout.projectDirectory.dir("src/generated"))
         includeFlywayTable.set(false)
 

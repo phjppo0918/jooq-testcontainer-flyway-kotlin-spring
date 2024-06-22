@@ -5,10 +5,10 @@ spring:
   jooq:
     sql-dialect: MySQL
   datasource:
-    url: jdbc:mysql://localhost:3306/mydatabase
+    url: jdbc:tc:mysql:8://test
     username: root
     password: verysecret
-    driverClassName: com.mysql.cj.jdbc.Driver
+    driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
 
   flyway:
     enabled: true
