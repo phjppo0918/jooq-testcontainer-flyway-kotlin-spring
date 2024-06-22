@@ -5,7 +5,7 @@ spring:
   jooq:
     sql-dialect: MySQL
   datasource:
-    url: jdbc:tc:mysql:8://test
+    url: jdbc:tc:mysql:8://mydatabase
     username: root
     password: verysecret
     driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver

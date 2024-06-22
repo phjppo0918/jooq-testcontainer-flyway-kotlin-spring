@@ -2,14 +2,6 @@ spring:
   application:
     name: jooq-testcontainer-flyway-kotlin-spring
 
-  jooq:
-    sql-dialect: MySQL
-  datasource:
-    url: jdbc:mysql://localhost:3306/mydatabase
-    username: root
-    password: verysecret
-    driverClassName: com.mysql.cj.jdbc.Driver
-
   flyway:
     enabled: true
     baseline-on-migrate: true

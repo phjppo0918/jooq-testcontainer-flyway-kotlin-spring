@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
     implementation("org.jooq:jooq-codegen:$jooqVersion")
-    runtimeOnly("com.mysql:mysql-connector-j:8.0.33")
+    runtimeOnly("com.mysql:mysql-connector-j:8.3.0")
 }
 
 tasks.test {
