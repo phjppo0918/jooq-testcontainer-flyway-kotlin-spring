@@ -119,14 +119,14 @@ tasks {
 
             database.withForcedTypes(
                 ForcedType()
-                    .withUserType("java.lang.Long")
-                    .withTypes("int unsigned"),
+                    .withTypes("int unsigned")
+                    .withUserType("java.lang.Long"),
                 ForcedType()
-                    .withUserType("java.lang.Integer")
-                    .withTypes("tinyint unsigned"),
+                    .withTypes("tinyint unsigned")
+                    .withUserType("java.lang.Integer"),
                 ForcedType()
-                    .withUserType("java.lang.Integer")
-                    .withTypes("smallint unsigned"),
+                    .withTypes("smallint unsigned")
+                    .withUserType("java.lang.Integer"),
             )
         }
     }
